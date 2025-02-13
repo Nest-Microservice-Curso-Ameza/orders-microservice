@@ -17,15 +17,25 @@ async function bootstrap() {
   const logger = new Logger('orders-ms');
 
   // const app = await NestFactory.create(AppModule);
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        port: envs.port
-      }
+  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  //   AppModule,
+  //   {
+  //     transport: Transport.TCP,
+  //     options: {
+  //       port: envs.port
+  //     }
+  //   },
+  // );
+
+
+
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+    transport: Transport.NATS,
+    options: {
+      servers: envs.natsServers,
     },
-  );
+  });
+  
 
   app.useGlobalPipes(
     new ValidationPipe({
